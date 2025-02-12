@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Liste des messages affichés -->
+    <ListView fx:id="messageList" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="560.0"/>
+
+    <!-- Champ pour écrire un message -->
+    <TextField fx:id="messageInput" layoutX="20.0" layoutY="340.0" prefWidth="440.0" promptText="Écrire un message..."/>
+
+    <!-- Bouton pour envoyer un message -->
+
+</AnchorPane>

@@ -1,0 +1,185 @@
+@startuml
+package Game {
+  abstract class Partie {
+      - id: String
+      - nbTentative: int
+      - _monapp: MonApp
+      - TypePartie: int
+      - hotePret: boolean
+      - TimeGame: int
+      + Partie(id: String, nbTentative: int, monapp: MonApp, time: int, type: int)
+      + getTimeGame(): int
+      + isHotePret(): boolean
+      + getTypePartie(): int
+      + getid(): String
+      + getNbTentative(): int
+      + setNbTentative(nb: int): void
+      + chooseWord(): String
+      + supprimerPartie(): void
+  }
+
+  class MyTimerTask {
+      - int Time
+      - int compteur
+      - ThreadTimer thread
+      - Socket socket
+      + MyTimerTask(time: int, thread: ThreadTimer, socket: Socket)
+      + run(): void
+  }
+
+  class ThreadTimer {
+      - Joueur joueur
+      - int Timer
+      - boolean taskIsFinished
+      - MyTimerTask myTask
+      + ThreadTimer(time: int, joueur: Joueur)
+      + run(): void
+      + afficherTimer(sec: int): void
+      + stopThreadTimer(): void
+      + stopLaPartieEstTerminer(): void
+  }
+
+  class GestionnaireCommunication {
+      - Joueur : joueur
+      - inputStream : DataInputStream
+      - outputStream : DataOutputStream
+      - chat : Chat
+
+      + GestionnaireCommunication(Joueur: Joueur)
+      + getInputStream() : DataInputStream
+      + setChat(chat: Chat) : void
+      + getChat() : Chat
+      + getOutputStream() : DataOutputStream
+      + close() : void
+  }
+
+  class IntermediairePartie {
+      - PartieMulti partie
+      + void run()
+      + void arreterIntermediairePartie()
+  }
+
+     class IntermediaireLectureJoueur {
+         - DataInputStream inputStream
+         - Joueur joueur
+         - GestionnaireCommunication gestionnaireCommunication
+         + IntermediaireLectureJoueur(joueur: Joueur, com: GestionnaireCommunication)
+         + run(): void
+         + arreterIntermediaireLectureJoueur(): void
+     }
+
+    class PartieMulti {
+      - ListeJoueurs: ArrayList<Socket>
+      - partie: PartieMulti
+      + PartieMulti(partieMulti: PartieMulti)
+      + run(): void
+      + recevoirMessageChat(message: String, joueurSocket: Socket): void
+      + setEventOccured(event: String, joueurSocket: Socket): void
+    }
+
+    class PartieSolo {
+        - socket: Socket
+        - inputStream: DataInputStream
+        - outputStream: DataOutputStream
+        + PartieSolo(id: String, nbTentative: int, socket: Socket, monApp: MonApp, time: int, type: int)
+        + run(): void
+        - arreterPartieSolo(): void
+    }
+
+    class Serveur {
+        +Serveur()
+        +main(String[] args) : void
+    }
+
+    class MonApp {
+        +Socket socket
+        +int modeJeu
+        +MonApp(Socket socket)
+        +run() : void
+        +supprimerPartie(Partie partie) : void
+        +static getListePartie() : ArrayList<PartieMulti>
+    }
+
+    class Client {
+        +Client()
+        +main(String[] args) : void
+        +isNumeric(String str) : boolean
+    }
+
+    class Socket {
+        // La classe Socket est généralement implémentée dans une bibliothèque
+        // Pas besoin de la détailler ici
+    }
+
+   class Joueur {
+       - String id
+       - boolean isHote
+       - Socket socket
+       - DataInputStream inputStream
+       - DataOutputStream outputStream
+       - ThreadTimer myThreadTimer
+       - GestionnaireCommunication gestionnaireCommunication
+       --
+       + Joueur(Socket socket, boolean hote, String id)
+       + run(): void
+       + arreter(): void
+       + getid(): String
+       + getSocket(): Socket
+   }
+
+   class Chat {
+       - Joueur joueur
+       - DataOutputStream outputStream
+       - DataInputStream inputStream
+       - JFrame frame
+       - JTextArea chatArea
+       - JTextField messageField
+       - JButton sendButton
+       + Chat(joueur: Joueur)
+       + initialize(): void
+       + chargementDonnees(): void
+       + afficherMessageChat(message: String): void
+       - class MessageReceiver
+   }
+
+
+    class Thread {
+        +start() : void
+    }
+
+    'Relation héritage
+    Partie --|> Thread
+    PartieSolo --|> Partie
+    PartieMulti --|> Partie
+
+    'Relation MonApp et Partie
+    MonApp "1" *-- "0..1" PartieSolo
+    MonApp "1" *-- "0..*" PartieMulti
+    MonApp --|> Thread : "Hérite de"
+
+    'Joueur GestionnaireCom
+    Joueur *-- "1" GestionnaireCommunication : crée et utilise
+    Joueur *-- "1" IntermediaireLectureJoueur : crée et utilise
+
+    IntermediaireLectureJoueur --> "1" GestionnaireCommunication : utilise
+
+
+    PartieMulti *-- "1" IntermediairePartie : crée et utilise
+
+
+    Serveur "1" -- "0..*" Client : gère
+    Serveur "1" *-- "0..*" MonApp : accepte la connexion
+    Client "1" -- "1" Socket : utilise
+    Serveur "1" -- "0..*" Socket : crée
+
+    Client *--> "1" Joueur : crée et initialise
+
+    ThreadTimer *-- "1" MyTimerTask : crée et utilise
+    Joueur *--> "1" ThreadTimer : crée et possède
+
+
+    Joueur *--> "1" Chat : crée et possède
+
+
+}
+@enduml

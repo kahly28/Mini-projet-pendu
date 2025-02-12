@@ -1,0 +1,18 @@
+@startuml
+
+package Game {
+    class Client {
+        + Client()
+        + main(args: String[]) : void
+        + isNumeric(str: String) : boolean
+    }
+
+    ' Dépendances et relations
+    Client --> Socket
+    Client --> DataInputStream
+    Client --> DataOutputStream
+    Client --> Scanner
+    Client ..> Joueur : utilise
+}
+
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+
+actor Joueur
+actor Hote
+
+participant "Serveur" as Serveur
+
+Joueur -> Serveur : Rejoindre la Partie
+Serveur -> Joueur : Quel mode de jeu ? 1 (solo) ou 2 (multi)
+Joueur -> Serveur : Choisir mode (1 ou 2)
+
+alt ModeSolo
+    Serveur -> Joueur : Combien de tentatives ?
+    Joueur -> Serveur : Nombre de tentatives
+    Serveur -> Joueur : Combien de temps max pour la partie ?
+    Joueur -> Serveur : Durée du chrono
+    Serveur -> Joueur : Confirmation de démarrage
+    Joueur -> Serveur : Confirmer démarrage
+    Serveur -> Joueur : Démarrage de la partie
+end
+
+alt ModeMulti
+    Serveur -> Joueur : Créer ou rejoindre un salon ? (1 ou 2)
+    Joueur -> Serveur : Choisir créer (1) ou rejoindre (2)
+
+    alt CréerSalon
+        Serveur -> Joueur : Choisissez un ID pour la partie
+        Joueur -> Serveur : ID de la partie
+        Serveur -> Joueur : ID valide ou non
+        alt ID valide
+            Serveur -> Joueur : Combien de tentatives ?
+            Joueur -> Serveur : Nombre de tentatives
+            Serveur -> Joueur : Combien de temps max pour la partie ?
+            Joueur -> Serveur : Durée du chrono
+            Serveur -> Joueur : Confirmation de démarrage
+            Joueur -> Serveur : Confirmer démarrage
+            Serveur -> Joueur : Démarrage de la partie
+        else ID non valide
+            Serveur -> Joueur : ID déjà utilisé, essayez un autre
+        end
+    end
+
+    alt RejoindreSalon
+        Serveur -> Joueur : Entrez l'ID de la partie à rejoindre
+        Joueur -> Serveur : ID de la partie
+        Serveur -> Joueur : Partie trouvée ou non
+        alt PartieTrouvée
+            Serveur -> Joueur : Rejoindre la partie
+            Serveur -> Joueur : Démarrage de la partie
+        else PartieNonTrouvée
+            Serveur -> Joueur : Partie non trouvée, retour au menu
+        end
+    end
+end
+
+@enduml

@@ -1,0 +1,71 @@
+@startuml
+
+actor Joueur
+actor Hote
+
+participant "Serveur" as Serveur
+
+Joueur -> Serveur : Rejoindre la Partie
+Hote -> Serveur : Démarrer la Partie
+
+alt PartieSolo
+    Serveur -> Joueur : Envoyer mot à deviner (masqué)
+
+    alt ChronoDébut
+        Serveur -> Serveur : Démarrer le chrono
+    end
+
+    Joueur -> Serveur : Proposer une lettre/mot
+    Serveur -> Joueur : Vérifier lettre/mot
+    alt Proposition correcte
+        Serveur -> Joueur : Message de victoire
+        Serveur -> Joueur : Fin de la partie
+    else Mot non complet
+        Serveur -> Joueur : Renvoie du statut de la partie
+    end
+
+    alt ChronoExpire
+        Serveur -> Joueur : Envoie message de défaite à tous les joueurs
+        Serveur -> Joueur : Fin de la partie
+    end
+end
+
+alt PartieMulti
+    Serveur -> Joueur : Envoyer mot à deviner (masqué)
+
+    alt ChronoDébut
+        Serveur -> Serveur : Démarrer le chrono
+    end
+
+    alt Initialisation Chat
+        Serveur -> Serveur : Initialiser le chat
+        Serveur -> Joueur : Afficher interface chat
+    end
+
+    alt Choix Joueur
+        Joueur -> Serveur : Choisir action (proposer mot/lettre ou envoyer message dans le chat)
+
+        alt Proposer un mot/lettre
+            Joueur -> Serveur : Proposer une lettre/mot
+            Serveur -> Serveur : Vérifier lettre/mot
+            alt Proposition correcte
+                Serveur -> Joueur : Message de victoire ou de défaite selon le résultat
+                Serveur -> Joueur : Fin de la partie
+            else Mot non encore complet
+                Serveur -> Joueur : Renvoie du statut de la partie
+            end
+        else Envoyer un message au chat
+            Joueur -> Serveur : Envoyer message
+            Serveur -> Serveur : Afficher message dans le chat
+        end
+    end
+
+    alt ChronoExpire
+        Serveur -> Joueur : Envoie message de défaite à tous les joueurs
+        Serveur -> Joueur : Fin de la partie
+    end
+end
+
+Serveur -> Joueur : Fermeture des connexions
+
+@enduml

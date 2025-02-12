@@ -1,0 +1,26 @@
+@startuml
+
+package Game {
+    class IntermediaireLectureJoueur {
+        - socket : Socket
+        - inputStream : DataInputStream
+        - joueur : Joueur
+        - gestionnaireCommunication : GestionnaireCommunication
+
+        + IntermediaireLectureJoueur(socket: Socket, joueur: Joueur, com: GestionnaireCommunication)
+        + run() : void
+        + arreterIntermediaireLectureJoueur() : void
+    }
+
+    ' Héritage
+    IntermediaireLectureJoueur <|-- Thread
+
+    ' Relations
+    IntermediaireLectureJoueur --> Socket : utilise
+    IntermediaireLectureJoueur --> DataInputStream : utilise
+    IntermediaireLectureJoueur --> Joueur : association
+    IntermediaireLectureJoueur --> GestionnaireCommunication : association forte
+    IntermediaireLectureJoueur ..> Chat : dépendance
+}
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+
+package Game {
+    class GestionnaireCommunication {
+        - socket : Socket
+        - inputStream : DataInputStream
+        - outputStream : DataOutputStream
+        - chat : Chat
+
+        + GestionnaireCommunication(socket: Socket)
+        + getInputStream() : DataInputStream
+        + setChat(chat: Chat) : void
+        + getChat() : Chat
+        + getOutputStream() : DataOutputStream
+        + close() : void
+    }
+
+    ' Dépendances et relations
+    GestionnaireCommunication --> Socket
+    GestionnaireCommunication --> DataInputStream
+    GestionnaireCommunication --> DataOutputStream
+    GestionnaireCommunication --> Chat
+}
+
+@enduml
